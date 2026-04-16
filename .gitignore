@@ -1,41 +1,44 @@
-```
+```gitignore
 # Build artifacts
-*.sln
-obj/
-bin/
-Debug/
-Release/
-*.user
-*.userosscache
-*.suo
-*.userprefs
-.vs/
-.vscode/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
 
 # Dependencies
-packages/
 node_modules/
-.nuget/
-.nuxt/
+venv/
+.venv/
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+target/
+.gradle/
 
-# Environment specific
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Environment
 .env
 .env.local
 *.env.*
 
-# OS generated files
+# Editors
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# System
 .DS_Store
 Thumbs.db
-desktop.ini
-$RECYCLE.BIN/
-*.tmp
-
-# Logs
-*.log
-
-# User-specific files
-*.user
-*.suo
-*.userosscache
-*.userprefs
 ```

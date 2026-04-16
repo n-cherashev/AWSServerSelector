@@ -21,6 +21,7 @@ public partial class App : Application
                 services.AddSingleton<IConnectionProbeService, ConnectionProbeService>();
                 services.AddSingleton<IHostsManagementService, HostsManagementService>();
                 services.AddSingleton<ILocalizationService, LocalizationService>();
+                services.AddSingleton<IDialogNavigationService, DialogNavigationService>();
                 
                 // ViewModels
                 services.AddTransient<MainWindowViewModel>();
