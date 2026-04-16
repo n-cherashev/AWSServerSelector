@@ -26,9 +26,6 @@ public partial class App : Application
                 // ViewModels
                 services.AddTransient<MainWindowViewModel>();
                 
-                // Views
-                services.AddSingleton<MainWindow>();
-                
                 // Logging
                 services.AddLogging(builder =>
                 {
@@ -42,7 +39,8 @@ public partial class App : Application
     {
         await _host.StartAsync();
         
-        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        var viewModel = _host.Services.GetRequiredService<MainWindowViewModel>();
+        var mainWindow = new MainWindow(viewModel);
         mainWindow.Show();
         
         base.OnStartup(e);

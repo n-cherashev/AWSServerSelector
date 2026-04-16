@@ -1,28 +1,18 @@
-```gitignore
+```
 # Build artifacts
-*.o
-*.obj
+bin/
+obj/
 *.exe
 *.dll
-*.so
-*.a
-*.out
+*.pdb
+*.nupkg
 
 # Dependencies
+packages/
 node_modules/
-venv/
-.venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-target/
-.gradle/
 
-# Logs and temp files
+# Logs
 *.log
-*.tmp
-*.swp
-*.swo
 
 # Environment
 .env
@@ -32,13 +22,15 @@ target/
 # Editors
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
-
-# System
+# OS generated files
 .DS_Store
 Thumbs.db
+
+# Test and coverage
+coverage/
+htmlcov/
+*.coverage
 ```
