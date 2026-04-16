@@ -31,6 +31,7 @@ public partial class App : System.Windows.Application
                     context.Configuration.GetSection(RegionCatalogOptions.SectionName));
 
                 // Domain Services
+                services.AddSingleton<IServerCatalogService, ServerCatalogService>();
                 services.AddSingleton<IConnectionProbeService, ConnectionProbeService>();
                 services.AddSingleton<IHostsManagementService, HostsManagementService>();
 
