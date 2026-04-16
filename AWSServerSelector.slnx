@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/PingByDaylight.Application/PingByDaylight.Application.csproj" />
+  <Project Path="src/PingByDaylight.Domain/PingByDaylight.Domain.csproj" />
+  <Project Path="src/PingByDaylight.Infrastructure/PingByDaylight.Infrastructure.csproj" />
+  <Project Path="src/PingByDaylight.Presentation/PingByDaylight.Presentation.csproj" />
+</Solution>
