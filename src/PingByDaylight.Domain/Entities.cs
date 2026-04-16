@@ -9,6 +9,15 @@ public record ServerInfo(
     bool IsUnstable = false
 );
 
+/// <summary>
+/// Вспомогательная запись для передачи информации о сервере с пингом
+/// </summary>
+public record ServerInfoWithPing(
+    ServerInfo ServerInfo,
+    int PingMs,
+    bool IsReachable
+);
+
 public record ServerSelection(
     string RegionKey,
     ApplyMode ApplyMode,

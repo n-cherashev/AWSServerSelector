@@ -222,12 +222,3 @@ public class HostsManagementService : IHostsManagementService
         return sb.ToString();
     }
 }
-
-/// <summary>
-/// Вспомогательная запись для передачи информации о сервере с пингом
-/// </summary>
-public record ServerInfoWithPing(
-    ServerInfo ServerInfo,
-    int PingMs,
-    bool IsReachable
-);
