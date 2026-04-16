@@ -20,6 +20,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" 
                              Text="{Binding DisplayName}" 
@@ -38,7 +39,7 @@
                             Background="#FF1E1E1E"
                             CornerRadius="6"
                             Padding="10,4"
-                            Visibility="{Binding BestPingVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                            Visibility="{Binding RegionBestPingVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm0 4H9v-2h2v2z" 
                                   Fill="{StaticResource SuccessBrush}" 
@@ -52,6 +53,32 @@
                                      VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
+                    <!-- Loading Spinner for Region -->
+                    <Border Grid.Column="2"
+                            Background="#FF1E1E1E"
+                            CornerRadius="6"
+                            Padding="10,4"
+                            Visibility="{Binding IsRegionProbing, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <components:LoadingSpinner IsActive="True" 
+                                         Width="16" Height="16"
+                                         Foreground="{StaticResource AccentBrush}"
+                                         VerticalAlignment="Center"
+                                         Margin="0,0,6,0"/>
+                            <TextBlock Text="Проверка..." 
+                                     Foreground="{StaticResource SubTextBrush}"
+                                     FontSize="12"
+                                     VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <!-- Probe Button -->
+                    <Button Grid.Column="3"
+                            Content="Проверить регион"
+                            Style="{StaticResource IconButton}"
+                            Command="{Binding ProbeRegionCommand}"
+                            ToolTip="Проверить пинг всех серверов в регионе"
+                            Padding="10,6"
+                            Margin="10,0,0,0"/>
                 </Grid>
             </Border>
         </Expander.Header>

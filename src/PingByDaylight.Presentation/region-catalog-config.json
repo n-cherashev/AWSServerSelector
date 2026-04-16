@@ -38,6 +38,18 @@
         "tcpPort": 443
       },
       {
+        "key": "Europe (Paris)",
+        "groupKey": "Europe",
+        "groupDisplayName": "Europe",
+        "hosts": [
+          "gamelift.eu-west-3.amazonaws.com",
+          "gamelift-ping.eu-west-3.api.aws"
+        ],
+        "stable": false,
+        "displayNameKey": "Europe_Paris",
+        "tcpPort": 443
+      },
+      {
         "key": "US East (N. Virginia)",
         "groupKey": "Americas",
         "groupDisplayName": "The Americas",

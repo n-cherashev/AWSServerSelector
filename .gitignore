@@ -1,27 +1,33 @@
 ```
-# Build artifacts
+# Compiled and build artifacts
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
 bin/
 obj/
-*.dll
-*.exe
-*.pdb
-*.nupkg
-*.snupkg
+Debug/
+Release/
 
 # Dependencies
 packages/
 node_modules/
-
-# Logs
-*.log
-
-# User-specific files
+venv/
+.venv/
+__pycache__/
+*.egg-info/
 .vs/
-*.user
-*.userosscache
-*.suo
+.vscode/
+.idea/
 
-# Environment specific settings
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
 .env
 .env.local
 *.env.*
@@ -30,7 +36,9 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# IDE specific
-.vscode/
-.idea/
+# Build outputs
+dist/
+build/
+target/
+out/
 ```
