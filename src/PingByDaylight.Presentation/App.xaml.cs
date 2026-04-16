@@ -18,14 +18,19 @@ public partial class App : System.Windows.Application
     public App()
     {
         _host = Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.SetBasePath(AppContext.BaseDirectory);
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                config.AddJsonFile("region-catalog-config.json", optional: false, reloadOnChange: true);
+            })
             .ConfigureServices((context, services) =>
             {
-                // Bind RegionCatalog from appsettings.json / regions.json
+                // Bind RegionCatalog from region-catalog-config.json
                 services.Configure<RegionCatalogOptions>(
                     context.Configuration.GetSection(RegionCatalogOptions.SectionName));
 
                 // Domain Services
-                services.AddSingleton<IServerCatalogService, ServerCatalogService>();
                 services.AddSingleton<IConnectionProbeService, ConnectionProbeService>();
                 services.AddSingleton<IHostsManagementService, HostsManagementService>();
 
