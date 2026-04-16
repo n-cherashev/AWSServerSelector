@@ -6,6 +6,8 @@
         <ResourceDictionary>
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
+            <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter"/>
             
             <!-- Modern Dark Theme Brushes -->
             <SolidColorBrush x:Key="PrimaryBrush" Color="#FF1A1A1A"/>

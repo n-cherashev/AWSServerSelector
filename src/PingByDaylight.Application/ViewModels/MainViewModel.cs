@@ -245,21 +245,44 @@ public partial class ServerItemViewModel : ObservableObject
     [ObservableProperty]
     private DateTime _lastChecked;
 
+    [ObservableProperty]
+    private int _jitterMs;
+
+    [ObservableProperty]
+    private double _packetLossPercent;
+
     public string DisplayLatency => ConnectionState switch
     {
-        ConnectionState.Connected => $"{LatencyMs} ms",
+        ConnectionState.Connected => LatencyMs < 50 
+            ? $"{LatencyMs}ms" 
+            : $"{LatencyMs}ms ±{JitterMs}ms",
         ConnectionState.Timeout => "Timeout",
         ConnectionState.Error => "Error",
         _ => "---"
     };
 
+    public string DisplayPacketLoss => PacketLossPercent > 0 
+        ? $"{PacketLossPercent:F1}% loss" 
+        : string.Empty;
+
     public string StatusColor => ConnectionState switch
     {
-        ConnectionState.Connected when LatencyMs < 50 => "#FF28A745",
-        ConnectionState.Connected when LatencyMs < 100 => "#FFFFC107",
+        ConnectionState.Connected when LatencyMs < 50 && JitterMs < 10 => "#FF28A745",
+        ConnectionState.Connected when LatencyMs < 100 && JitterMs < 30 => "#FFFFC107",
         ConnectionState.Connected => "#FFDC143C",
         ConnectionState.Timeout or ConnectionState.Error => "#FF666666",
         _ => "#FFB0B0B0"
+    };
+
+    public string QualityBadge => ConnectionState switch
+    {
+        ConnectionState.Connected when LatencyMs < 50 && JitterMs < 10 => "Excellent",
+        ConnectionState.Connected when LatencyMs < 100 && JitterMs < 30 => "Good",
+        ConnectionState.Connected when LatencyMs < 200 => "Fair",
+        ConnectionState.Connected => "Poor",
+        ConnectionState.Timeout => "Timeout",
+        ConnectionState.Error => "Error",
+        _ => "Unknown"
     };
 
     public ServerItemViewModel(ServerInfo serverInfo, IConnectionProbeService probeService)
@@ -283,7 +306,11 @@ public partial class ServerItemViewModel : ObservableObject
         LatencyMs = status.LatencyMs;
         ConnectionState = status.State;
         LastChecked = status.LastChecked;
+        JitterMs = status.JitterMs;
+        PacketLossPercent = status.PacketLossPercent;
         OnPropertyChanged(nameof(DisplayLatency));
         OnPropertyChanged(nameof(StatusColor));
+        OnPropertyChanged(nameof(QualityBadge));
+        OnPropertyChanged(nameof(DisplayPacketLoss));
     }
 }

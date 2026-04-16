@@ -2,10 +2,11 @@
 # Build artifacts
 bin/
 obj/
-*.exe
 *.dll
+*.exe
 *.pdb
-*.nupkg
+*.config
+*.manifest
 
 # Dependencies
 packages/
@@ -22,15 +23,12 @@ node_modules/
 # Editors
 .vscode/
 .idea/
-*.swp
-*.swo
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# Test and coverage
-coverage/
-htmlcov/
-*.coverage
 ```

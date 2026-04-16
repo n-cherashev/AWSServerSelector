@@ -33,7 +33,9 @@ public record ConnectionStatus(
     string ServerKey,
     int LatencyMs,
     ConnectionState State,
-    DateTime LastChecked
+    DateTime LastChecked,
+    int JitterMs = 0,
+    double PacketLossPercent = 0.0
 );
 
 public enum ConnectionState
