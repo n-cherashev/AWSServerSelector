@@ -267,14 +267,7 @@ public partial class ServerGroupViewModel : ObservableObject
             // Reset all server states in this region
             foreach (var server in Servers)
             {
-                server.LatencyMs = 0;
-                server.ConnectionState = ConnectionState.Unknown;
-                server.JitterMs = 0;
-                server.PacketLossPercent = 0;
-                server.OnPropertyChanged(nameof(server.DisplayLatency));
-                server.OnPropertyChanged(nameof(server.StatusColor));
-                server.OnPropertyChanged(nameof(server.QualityBadge));
-                server.OnPropertyChanged(nameof(server.DisplayPacketLoss));
+                server.ResetStatus();
             }
             
             // Trigger probe for all servers in this region
@@ -353,6 +346,18 @@ public partial class ServerItemViewModel : ObservableObject
     {
         ServerInfo = serverInfo;
         _probeService = probeService;
+    }
+
+    public void ResetStatus()
+    {
+        LatencyMs = 0;
+        ConnectionState = ConnectionState.Unknown;
+        JitterMs = 0;
+        PacketLossPercent = 0;
+        OnPropertyChanged(nameof(DisplayLatency));
+        OnPropertyChanged(nameof(StatusColor));
+        OnPropertyChanged(nameof(QualityBadge));
+        OnPropertyChanged(nameof(DisplayPacketLoss));
     }
 
     [RelayCommand]
