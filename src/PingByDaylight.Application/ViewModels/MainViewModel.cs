@@ -12,8 +12,6 @@ public partial class MainWindowViewModel : ObservableObject
     private readonly IServerCatalogService _serverCatalogService;
     private readonly IConnectionProbeService _probeService;
     private readonly IHostsManagementService _hostsService;
-    private readonly IDialogNavigationService _dialogService;
-    private readonly ILocalizationService _localizationService;
     private readonly ILogger<MainWindowViewModel> _logger;
 
     [ObservableProperty]
@@ -37,28 +35,25 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool _isBusy;
 
-    public string WindowTitle => _localizationService.GetString("AppTitle");
-    public string SettingsMenuText => _localizationService.GetString("Settings");
-    public string AboutMenuText => _localizationService.GetString("About");
-    public string CheckUpdatesMenuText => _localizationService.GetString("CheckUpdates");
-    public string OpenHostsMenuText => _localizationService.GetString("OpenHosts");
-    public string ConnectionInfoMenuText => _localizationService.GetString("ConnectionInfo");
+    public string WindowTitle => "PingByDaylight";
+    public string SettingsMenuText => "Настройки";
+    public string AboutMenuText => "О программе";
+    public string CheckUpdatesMenuText => "Проверить обновления";
+    public string OpenHostsMenuText => "Открыть hosts";
+    public string ConnectionInfoMenuText => "Информация о соединении";
+    public string SelectServersText => "Выберите серверы";
 
     public MainWindowViewModel(
         IServerCatalogService serverCatalogService,
         IConnectionProbeService probeService,
         IHostsManagementService hostsService,
-        IDialogNavigationService dialogService,
-        ILocalizationService localizationService,
         ILogger<MainWindowViewModel> logger)
     {
         _serverCatalogService = serverCatalogService;
         _probeService = probeService;
         _hostsService = hostsService;
-        _dialogService = dialogService;
-        _localizationService = localizationService;
         _logger = logger;
-        
+
         _ = InitializeAsync();
     }
 
@@ -75,7 +70,7 @@ public partial class MainWindowViewModel : ObservableObject
             }
             else
             {
-                StatusMessage = $"Error loading servers: {serversResult.Error}";
+                StatusMessage = $"Ошибка загрузки серверов: {serversResult.Error}";
                 _logger.LogError("Failed to load servers: {Error}", serversResult.Error);
             }
         }
@@ -91,22 +86,22 @@ public partial class MainWindowViewModel : ObservableObject
         ServerGroups.Clear();
 
         var groups = servers.GroupBy(s => s.GroupKey).ToList();
-        
+
         foreach (var group in groups)
         {
             var groupVm = new ServerGroupViewModel(group.Key, group.First().GroupDisplayName);
-            
+
             foreach (var server in group)
             {
                 var serverVm = new ServerItemViewModel(server, _probeService);
                 AllServers.Add(serverVm);
                 groupVm.Servers.Add(serverVm);
             }
-            
+
             ServerGroups.Add(groupVm);
         }
 
-        StatusMessage = _localizationService.GetString("SelectServers");
+        StatusMessage = SelectServersText;
     }
 
     [RelayCommand]
@@ -116,7 +111,7 @@ public partial class MainWindowViewModel : ObservableObject
         try
         {
             var selectedServers = AllServers.Where(s => s.IsSelected).Select(s => s.ServerInfo.Key).ToList();
-            
+
             var selection = new ServerSelection(
                 "default",
                 ApplyMode,
@@ -125,15 +120,15 @@ public partial class MainWindowViewModel : ObservableObject
             );
 
             var result = await _hostsService.ApplySelectionAsync(selection);
-            
+
             if (result.IsSuccess)
             {
-                StatusMessage = "Configuration applied successfully";
+                StatusMessage = "Конфигурация применена успешно";
                 _logger.LogInformation("Applied selection for {Count} servers", selectedServers.Count);
             }
             else
             {
-                StatusMessage = $"Apply failed: {result.Error}";
+                StatusMessage = $"Ошибка применения: {result.Error}";
                 _logger.LogError("Failed to apply selection: {Error}", result.Error);
             }
         }
@@ -150,19 +145,19 @@ public partial class MainWindowViewModel : ObservableObject
         try
         {
             var result = await _hostsService.ResetToDefaultAsync();
-            
+
             if (result.IsSuccess)
             {
                 foreach (var server in AllServers)
                 {
                     server.IsSelected = false;
                 }
-                StatusMessage = "Reset to default configuration";
+                StatusMessage = "Сброшено к конфигурации по умолчанию";
                 _logger.LogInformation("Reset to default");
             }
             else
             {
-                StatusMessage = $"Reset failed: {result.Error}";
+                StatusMessage = $"Ошибка сброса: {result.Error}";
                 _logger.LogError("Failed to reset: {Error}", result.Error);
             }
         }
@@ -173,18 +168,6 @@ public partial class MainWindowViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task OpenSettingsAsync() => await _dialogService.ShowSettingsDialogAsync();
-
-    [RelayCommand]
-    private async Task OpenAboutAsync() => await _dialogService.ShowAboutDialogAsync();
-
-    [RelayCommand]
-    private async Task CheckUpdatesAsync() => await _dialogService.ShowUpdateDialogAsync();
-
-    [RelayCommand]
-    private async Task OpenConnectionInfoAsync() => await _dialogService.ShowConnectionInfoAsync();
-
-    [RelayCommand]
     private async Task ProbeAllAsync()
     {
         IsBusy = true;
@@ -192,7 +175,7 @@ public partial class MainWindowViewModel : ObservableObject
         {
             var serverKeys = AllServers.Select(s => s.ServerInfo.Key);
             var results = await _probeService.ProbeAllAsync(serverKeys);
-            
+
             if (results.IsSuccess)
             {
                 foreach (var status in results.Value)
@@ -203,7 +186,7 @@ public partial class MainWindowViewModel : ObservableObject
                         serverVm.UpdateStatus(status);
                     }
                 }
-                StatusMessage = "Probe completed";
+                StatusMessage = "Проверка завершена";
             }
         }
         finally
@@ -217,7 +200,7 @@ public partial class ServerGroupViewModel : ObservableObject
 {
     public string GroupKey { get; }
     public string DisplayName { get; }
-    
+
     public ObservableCollection<ServerItemViewModel> Servers { get; } = [];
 
     public ServerGroupViewModel(string groupKey, string displayName)
@@ -253,16 +236,16 @@ public partial class ServerItemViewModel : ObservableObject
 
     public string DisplayLatency => ConnectionState switch
     {
-        ConnectionState.Connected => LatencyMs < 50 
-            ? $"{LatencyMs}ms" 
+        ConnectionState.Connected => LatencyMs < 50
+            ? $"{LatencyMs}ms"
             : $"{LatencyMs}ms ±{JitterMs}ms",
         ConnectionState.Timeout => "Timeout",
         ConnectionState.Error => "Error",
         _ => "---"
     };
 
-    public string DisplayPacketLoss => PacketLossPercent > 0 
-        ? $"{PacketLossPercent:F1}% loss" 
+    public string DisplayPacketLoss => PacketLossPercent > 0
+        ? $"{PacketLossPercent:F1}% loss"
         : string.Empty;
 
     public string StatusColor => ConnectionState switch

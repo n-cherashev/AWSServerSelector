@@ -1,9 +1,11 @@
 using System.Windows;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Application.ViewModels;
+using PingByDaylight.Domain;
 using PingByDaylight.Infrastructure.Services;
 using PingByDaylight.Presentation.Views;
 
@@ -18,16 +20,18 @@ public partial class App : System.Windows.Application
         _host = Host.CreateDefaultBuilder()
             .ConfigureServices((context, services) =>
             {
+                // Bind RegionCatalog from appsettings.json / regions.json
+                services.Configure<RegionCatalogOptions>(
+                    context.Configuration.GetSection(RegionCatalogOptions.SectionName));
+
                 // Domain Services
                 services.AddSingleton<IServerCatalogService, ServerCatalogService>();
                 services.AddSingleton<IConnectionProbeService, ConnectionProbeService>();
                 services.AddSingleton<IHostsManagementService, HostsManagementService>();
-                services.AddSingleton<ILocalizationService, LocalizationService>();
-                services.AddSingleton<IDialogNavigationService, DialogNavigationService>();
-                
+
                 // ViewModels
                 services.AddTransient<MainWindowViewModel>();
-                
+
                 // Logging
                 services.AddLogging(builder =>
                 {
@@ -40,11 +44,11 @@ public partial class App : System.Windows.Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
-        
+
         var viewModel = _host.Services.GetRequiredService<MainWindowViewModel>();
         var mainWindow = new MainWindow(viewModel);
         mainWindow.Show();
-        
+
         base.OnStartup(e);
     }
 
@@ -52,7 +56,7 @@ public partial class App : System.Windows.Application
     {
         await _host.StopAsync();
         _host.Dispose();
-        
+
         base.OnExit(e);
     }
 }

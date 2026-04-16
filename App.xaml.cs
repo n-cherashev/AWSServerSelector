@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
@@ -107,7 +107,6 @@ namespace AWSServerSelector
             services.AddSingleton<IHostsFileService, HostsService>();
             services.AddSingleton<IUpdateService, UpdateService>();
             services.AddSingleton<IAwsIpRangeService, AwsIpRangeService>();
-            services.AddSingleton<IDialogService, DialogService>();
             services.AddSingleton<IRegionCatalogService, RegionCatalogService>();
             services.AddSingleton<IExternalNavigationService, ExternalNavigationService>();
             services.AddSingleton<IClipboardService, ClipboardService>();
@@ -116,7 +115,6 @@ namespace AWSServerSelector
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddSingleton<IConnectionStatusTextService, ConnectionStatusTextService>();
             services.AddSingleton<IHostsContentBuilder, HostsContentBuilder>();
-            services.AddSingleton<ILocalizationService, LocalizationService>();
 
             services.AddSingleton<MainWindow>();
             services.AddTransient<SettingsDialogViewModel>();
@@ -161,18 +159,18 @@ namespace AWSServerSelector
             if (sender is Window window)
             {
                 // Add command bindings for system commands
-                window.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, 
+                window.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand,
                     (s, args) => SystemCommands.MinimizeWindow(window)));
-                window.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, 
+                window.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand,
                     (s, args) => SystemCommands.MaximizeWindow(window)));
-                window.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand, 
+                window.CommandBindings.Add(new CommandBinding(SystemCommands.RestoreWindowCommand,
                     (s, args) => SystemCommands.RestoreWindow(window)));
-                window.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, 
+                window.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand,
                     (s, args) => SystemCommands.CloseWindow(window)));
-                
+
                 // Subscribe to state changed event
                 window.StateChanged += (s, args) => UpdateMaximizeRestoreButton(window);
-                
+
                 // Update maximize/restore button state initially
                 UpdateMaximizeRestoreButton(window);
             }

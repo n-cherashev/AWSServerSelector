@@ -1,16 +1,20 @@
 ```
 # Build artifacts
+*.obj
+*.exe
+*.dll
+*.pdb
+*.userprefs
+*.tmp
 bin/
 obj/
-*.dll
-*.exe
-*.pdb
-*.config
-*.manifest
+out/
 
 # Dependencies
 packages/
 node_modules/
+.nuget/
+.nvs/
 
 # Logs
 *.log
@@ -21,14 +25,18 @@ node_modules/
 *.env.*
 
 # Editors
+.vs/
 .vscode/
 .idea/
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+*.swp
+*.swo
 
-# OS generated files
+# OS
 .DS_Store
 Thumbs.db
+
+# Test coverage
+coverage/
+htmlcov/
+.coverage
 ```
