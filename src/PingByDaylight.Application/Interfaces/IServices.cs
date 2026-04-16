@@ -17,15 +17,15 @@ public interface IConnectionProbeService
 
 public interface IHostsManagementService
 {
-    Task<UnitResult> ApplySelectionAsync(ServerSelection selection);
-    Task<UnitResult> ResetToDefaultAsync();
-    Task<Result> GetHostsContentAsync();
+    Task<UnitResult<string>> ApplySelectionAsync(ServerSelection selection);
+    Task<UnitResult<string>> ResetToDefaultAsync();
+    Task<Result<string>> GetHostsContentAsync();
 }
 
 public interface IUserSettingsService
 {
     Task<Result<T>> GetSettingAsync<T>(string key, T defaultValue);
-    Task<UnitResult> SetSettingAsync<T>(string key, T value);
+    Task<UnitResult<string>> SetSettingAsync<T>(string key, T value);
 }
 
 public interface ILocalizationService
