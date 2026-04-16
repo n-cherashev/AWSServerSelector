@@ -190,6 +190,9 @@ public partial class ServerGroupViewModel : ObservableObject
 
     public ObservableCollection<ServerItemViewModel> Servers { get; } = [];
 
+    [ObservableProperty]
+    private bool _isRegionProbing;
+
     public ServerGroupViewModel(string groupKey, string displayName)
     {
         GroupKey = groupKey;
@@ -201,6 +204,7 @@ public partial class ServerGroupViewModel : ObservableObject
             OnPropertyChanged(nameof(BestPing));
             OnPropertyChanged(nameof(BestPingDisplay));
             OnPropertyChanged(nameof(BestPingVisible));
+            OnPropertyChanged(nameof(RegionBestPingVisible));
         };
         
         // Also subscribe to property changes of individual servers
@@ -229,11 +233,16 @@ public partial class ServerGroupViewModel : ObservableObject
     private void Server_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName is nameof(ServerItemViewModel.LatencyMs) or 
-                                   nameof(ServerItemViewModel.ConnectionState))
+                                   nameof(ServerItemViewModel.ConnectionState) or
+                                   nameof(ServerItemViewModel.IsProbing))
         {
             OnPropertyChanged(nameof(BestPing));
             OnPropertyChanged(nameof(BestPingDisplay));
             OnPropertyChanged(nameof(BestPingVisible));
+            OnPropertyChanged(nameof(RegionBestPingVisible));
+            
+            // Update region probing state based on any server probing
+            IsRegionProbing = Servers.Any(s => s.IsProbing);
         }
     }
 
@@ -245,7 +254,38 @@ public partial class ServerGroupViewModel : ObservableObject
 
     public string BestPingDisplay => BestPing == int.MaxValue ? "---" : $"{BestPing}ms";
 
-    public bool BestPingVisible => BestPing != int.MaxValue;
+    public bool BestPingVisible => BestPing != int.MaxValue && !IsRegionProbing;
+    
+    public bool RegionBestPingVisible => !IsRegionProbing;
+    
+    [RelayCommand]
+    private async Task ProbeRegionAsync()
+    {
+        IsRegionProbing = true;
+        try
+        {
+            // Reset all server states in this region
+            foreach (var server in Servers)
+            {
+                server.LatencyMs = 0;
+                server.ConnectionState = ConnectionState.Unknown;
+                server.JitterMs = 0;
+                server.PacketLossPercent = 0;
+                server.OnPropertyChanged(nameof(server.DisplayLatency));
+                server.OnPropertyChanged(nameof(server.StatusColor));
+                server.OnPropertyChanged(nameof(server.QualityBadge));
+                server.OnPropertyChanged(nameof(server.DisplayPacketLoss));
+            }
+            
+            // Trigger probe for all servers in this region
+            var tasks = Servers.Select(async s => await s.ProbeAsync());
+            await Task.WhenAll(tasks);
+        }
+        finally
+        {
+            IsRegionProbing = false;
+        }
+    }
 }
 
 public partial class ServerItemViewModel : ObservableObject
