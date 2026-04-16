@@ -4,6 +4,11 @@
              xmlns:converters="clr-namespace:PingByDaylight.Presentation.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Merge LoadingSpinner styles -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/LoadingSpinner.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            
             <!-- Converters -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
