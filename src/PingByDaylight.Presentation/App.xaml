@@ -4,10 +4,12 @@
              xmlns:converters="clr-namespace:PingByDaylight.Presentation.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Converters -->
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
             <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter"/>
+            <converters:MinusMarginConverter x:Key="MinusMarginConverter"/>
             
             <!-- Modern Dark Theme Brushes -->
             <SolidColorBrush x:Key="PrimaryBrush" Color="#FF1A1A1A"/>
@@ -20,6 +22,13 @@
             <SolidColorBrush x:Key="WarningBrush" Color="#FFFFC107"/>
             <SolidColorBrush x:Key="ErrorBrush" Color="#FFDC143C"/>
             <SolidColorBrush x:Key="BorderBrush" Color="#FF404040"/>
+            
+            <!-- Effects -->
+            <DropShadowEffect x:Key="DropShadowEffect" 
+                             BlurRadius="20" 
+                             ShadowDepth="4" 
+                             Opacity="0.3"
+                             Color="Black"/>
             
             <!-- Modern Button Style -->
             <Style x:Key="ModernButton" TargetType="Button">
@@ -74,6 +83,144 @@
                                     <Setter Property="Background" Value="#FF1A1A1A"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Menu Item Button -->
+            <Style x:Key="MenuItemButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="16,10"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="6" 
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Icon Button -->
+            <Style x:Key="IconButton" TargetType="Button">
+                <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="12,6"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="6" 
+                                    Padding="{TemplateBinding Padding}"
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FF3A3A3A"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="#FF1A1A1A"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Modern CheckBox -->
+            <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+                <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="CheckBox">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Width="18" Height="18" 
+                                        Background="{StaticResource SecondaryBrush}"
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="4">
+                                    <Path x:Name="CheckMark" 
+                                          Data="M4,9 L8,13 L14,6" 
+                                          Stroke="{StaticResource AccentBrush}" 
+                                          StrokeThickness="2"
+                                          Visibility="Collapsed"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                                </Border>
+                                <ContentPresenter Margin="8,0,0,0" 
+                                                VerticalAlignment="Center"
+                                                RecognizesAccessKey="True"/>
+                            </StackPanel>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Modern ScrollViewer -->
+            <Style x:Key="ModernScrollViewer" TargetType="ScrollViewer">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ScrollViewer">
+                            <Grid>
+                                <ScrollContentPresenter/>
+                                <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                          Alignment="Right"
+                                          Width="8"
+                                          Opacity="0.5"
+                                          Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <!-- Modern ProgressBar -->
+            <Style x:Key="ModernProgressBar" TargetType="ProgressBar">
+                <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Height" Value="4"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ProgressBar">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="2" 
+                                    ClipToBounds="True">
+                                <Border x:Name="PART_Tracker" 
+                                        Background="{TemplateBinding Foreground}"
+                                        CornerRadius="2"/>
+                            </Border>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
