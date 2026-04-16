@@ -102,6 +102,24 @@ dotnet build
 dotnet run --project AWSServerSelector.csproj
 ```
 
+### TCP Ping Service (AwsRegionProbe)
+
+Для точного измерения задержки до AWS регионов используется TCP-based probing вместо ICMP:
+
+```bash
+cd AwsRegionProbe
+dotnet restore
+dotnet build
+dotnet run
+```
+
+**Почему TCP вместо ICMP:**
+- ✅ Работает по умолчанию в AWS (не требует настройки Security Groups)
+- ✅ Высокая точность измерений (близко к реальной задержке приложения)
+- ✅ Надёжность в production-среде
+
+Конфигурация регионов: `region-catalog-config.json`
+
 ### Тесты
 
 ```bash

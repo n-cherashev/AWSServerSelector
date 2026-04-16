@@ -1,5 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Domain;
 
@@ -10,19 +11,19 @@ public class ServerCatalogService : IServerCatalogService
     private readonly ILogger<ServerCatalogService> _logger;
     private readonly IReadOnlyList<ServerInfo> _servers;
 
-    public ServerCatalogService(ILogger<ServerCatalogService> logger)
+    public ServerCatalogService(ILogger<ServerCatalogService> logger, IOptions<RegionCatalogOptions> options)
     {
         _logger = logger;
         
-        // Заглушка - в реальности загружается из regions.json
-        _servers = new List<ServerInfo>
-        {
-            new("eu-west", "EU West", "Europe", "Europe", ["1.1.1.1"], false),
-            new("eu-central", "EU Central", "Europe", "Europe", ["2.2.2.2"], false),
-            new("us-east", "US East", "North America", "North America", ["3.3.3.3"], false),
-            new("us-west", "US West", "North America", "North America", ["4.4.4.4"], false),
-            new("asia-east", "Asia East", "Asia", "Asia", ["5.5.5.5"], false),
-        }.AsReadOnly();
+        var config = options.Value;
+        _servers = config.Regions.Select(r => new ServerInfo(
+            r.Key,
+            r.Key, // DisplayName - используем ключ как отображаемое имя
+            r.GroupKey,
+            r.GroupDisplayName,
+            r.Hosts.ToArray(),
+            !r.Stable
+        )).ToList().AsReadOnly();
     }
 
     public Task<Result<IReadOnlyList<ServerInfo>>> GetServersAsync()

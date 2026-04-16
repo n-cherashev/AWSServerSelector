@@ -27,17 +27,3 @@ public interface IUserSettingsService
     Task<Result<T>> GetSettingAsync<T>(string key, T defaultValue);
     Task<UnitResult<string>> SetSettingAsync<T>(string key, T value);
 }
-
-public interface ILocalizationService
-{
-    string GetString(string key);
-    void SetLanguage(string culture);
-}
-
-public interface IDialogNavigationService
-{
-    Task ShowSettingsDialogAsync();
-    Task ShowAboutDialogAsync();
-    Task ShowUpdateDialogAsync();
-    Task ShowConnectionInfoAsync();
-}

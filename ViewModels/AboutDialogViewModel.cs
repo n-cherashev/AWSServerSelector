@@ -1,11 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using AWSServerSelector.Services.Interfaces;
 
 namespace AWSServerSelector.ViewModels;
 
 public partial class AboutDialogViewModel : ObservableObject
 {
-    public string DialogTitle => LocalizationManager.GetString("AboutTitle");
+    public string DialogTitle => "О программе";
 
     [ObservableProperty]
     private string aboutText = string.Empty;
@@ -19,12 +18,12 @@ public partial class AboutDialogViewModel : ObservableObject
     [ObservableProperty]
     private string awesomeText = string.Empty;
 
-    public void Configure(ILocalizationService localizationService, string currentVersion)
+    public void Configure(string currentVersion)
     {
-        AboutText = localizationService.GetString("AboutText");
-        Developer = localizationService.GetString("Developer");
-        VersionText = localizationService.GetString("Version", currentVersion);
-        AwesomeText = localizationService.GetString("Awesome");
+        AboutText = "Менеджер серверов для Dead by Daylight";
+        Developer = "Разработчик: Wafphlez";
+        VersionText = $"Версия: {currentVersion}";
+        AwesomeText = "Приятной игры!";
         OnPropertyChanged(nameof(DialogTitle));
     }
 }
