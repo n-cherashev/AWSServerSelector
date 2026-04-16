@@ -1,0 +1,55 @@
+<UserControl x:Class="PingByDaylight.Presentation.Components.QuickStatsComponent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+    
+    <Border Background="{StaticResource SecondaryBrush}" 
+            Padding="15,10"
+            CornerRadius="8">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0" HorizontalAlignment="Center">
+                <TextBlock Text="Регионов" 
+                         FontSize="11" 
+                         Foreground="{StaticResource SubTextBrush}"
+                         HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding TotalRegionsCount}" 
+                         FontSize="18" 
+                         FontWeight="Bold" 
+                         Foreground="{StaticResource TextBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+                <TextBlock Text="Выбрано" 
+                         FontSize="11" 
+                         Foreground="{StaticResource SubTextBrush}"
+                         HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding SelectedCount}" 
+                         FontSize="18" 
+                         FontWeight="Bold" 
+                         Foreground="{StaticResource AccentBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+            
+            <StackPanel Grid.Column="2" HorizontalAlignment="Center">
+                <TextBlock Text="Средний пинг" 
+                         FontSize="11" 
+                         Foreground="{StaticResource SubTextBrush}"
+                         HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding AverageLatency}" 
+                         FontSize="18" 
+                         FontWeight="Bold" 
+                         Foreground="{StaticResource SuccessBrush}"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
