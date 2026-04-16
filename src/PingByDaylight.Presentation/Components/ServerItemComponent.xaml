@@ -56,19 +56,37 @@
                          FontStyle="Italic"/>
             </StackPanel>
             
-            <!-- Quality Badge -->
+            <!-- Quality Badge / Loading Indicator -->
             <Border Grid.Row="0" 
                   Grid.Column="2"
-                  Background="{Binding StatusColor}"
                   CornerRadius="6"
                   Padding="10,4"
                   MinWidth="60"
                   HorizontalAlignment="Right">
-                <TextBlock Text="{Binding QualityBadge}" 
-                         Foreground="White"
-                         FontSize="12"
-                         FontWeight="Bold"
-                         HorizontalAlignment="Center"/>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{Binding StatusColor}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsProbing}" Value="True">
+                                <Setter Property="Background" Value="#FF3A3A3A"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <!-- Loading Spinner -->
+                    <ProgressRing IsActive="{Binding IsProbing}" 
+                                 Width="20" Height="20"
+                                 Foreground="{StaticResource AccentBrush}"
+                                 Visibility="{Binding IsProbing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <!-- Quality Badge Text -->
+                    <TextBlock Text="{Binding QualityBadge}" 
+                             Foreground="White"
+                             FontSize="12"
+                             FontWeight="Bold"
+                             HorizontalAlignment="Center"
+                             Visibility="{Binding IsProbing, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+                </Grid>
             </Border>
             
             <!-- Metrics Row -->

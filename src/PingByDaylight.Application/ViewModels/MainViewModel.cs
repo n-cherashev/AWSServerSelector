@@ -172,29 +172,14 @@ public partial class MainWindowViewModel : ObservableObject
     [RelayCommand]
     private async Task ProbeAllAsync()
     {
-        IsBusy = true;
-        try
-        {
-            var serverKeys = AllServers.Select(s => s.ServerInfo.Key);
-            var results = await _probeService.ProbeAllAsync(serverKeys);
-
-            if (results.IsSuccess)
-            {
-                foreach (var status in results.Value)
-                {
-                    var serverVm = AllServers.FirstOrDefault(s => s.ServerInfo.Key == status.ServerKey);
-                    if (serverVm != null)
-                    {
-                        serverVm.UpdateStatus(status);
-                    }
-                }
-                StatusMessage = "Проверка завершена";
-            }
-        }
-        finally
-        {
-            IsBusy = false;
-        }
+        // Запускаем пинг всех серверов асинхронно без блокировки UI
+        var tasks = AllServers
+            .Where(s => !s.IsProbing)
+            .Select(async s => await s.ProbeAsync());
+        
+        await Task.WhenAll(tasks);
+        
+        StatusMessage = "Проверка завершена";
     }
 }
 
@@ -213,9 +198,43 @@ public partial class ServerGroupViewModel : ObservableObject
         // Subscribe to server property changes to update best ping
         Servers.CollectionChanged += (s, e) =>
         {
+            OnPropertyChanged(nameof(BestPing));
             OnPropertyChanged(nameof(BestPingDisplay));
             OnPropertyChanged(nameof(BestPingVisible));
         };
+        
+        // Also subscribe to property changes of individual servers
+        Servers.CollectionChanged += OnServersCollectionChanged;
+    }
+    
+    private void OnServersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems != null)
+        {
+            foreach (var oldItem in e.OldItems.Cast<ServerItemViewModel>())
+            {
+                oldItem.PropertyChanged -= Server_PropertyChanged;
+            }
+        }
+        
+        if (e.NewItems != null)
+        {
+            foreach (var newItem in e.NewItems.Cast<ServerItemViewModel>())
+            {
+                newItem.PropertyChanged += Server_PropertyChanged;
+            }
+        }
+    }
+    
+    private void Server_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(ServerItemViewModel.LatencyMs) or 
+                                   nameof(ServerItemViewModel.ConnectionState))
+        {
+            OnPropertyChanged(nameof(BestPing));
+            OnPropertyChanged(nameof(BestPingDisplay));
+            OnPropertyChanged(nameof(BestPingVisible));
+        }
     }
 
     public int BestPing => Servers
@@ -252,6 +271,9 @@ public partial class ServerItemViewModel : ObservableObject
 
     [ObservableProperty]
     private double _packetLossPercent;
+
+    [ObservableProperty]
+    private bool _isProbing;
 
     public string DisplayLatency => ConnectionState switch
     {
@@ -296,10 +318,18 @@ public partial class ServerItemViewModel : ObservableObject
     [RelayCommand]
     private async Task ProbeAsync()
     {
-        var result = await _probeService.ProbeAsync(ServerInfo.Key);
-        if (result.IsSuccess)
+        IsProbing = true;
+        try
         {
-            UpdateStatus(result.Value);
+            var result = await _probeService.ProbeAsync(ServerInfo.Key);
+            if (result.IsSuccess)
+            {
+                UpdateStatus(result.Value);
+            }
+        }
+        finally
+        {
+            IsProbing = false;
         }
     }
 

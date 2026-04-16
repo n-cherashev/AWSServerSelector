@@ -10,6 +10,7 @@
             <converters:ColorToBrushConverter x:Key="ColorToBrushConverter"/>
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter"/>
             <converters:MinusMarginConverter x:Key="MinusMarginConverter"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
             
             <!-- Modern Dark Theme Brushes -->
             <SolidColorBrush x:Key="PrimaryBrush" Color="#FF1A1A1A"/>

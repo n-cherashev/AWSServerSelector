@@ -134,7 +134,7 @@
                   Padding="16,12"/>
         </Grid>
 
-        <!-- Busy Overlay -->
+        <!-- Busy Overlay - показывается только при загрузке/инициализации -->
         <Grid Grid.RowSpan="5" 
               Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
             <Border Background="#CC000000" 
@@ -147,7 +147,7 @@
                            Height="4"
                            Foreground="{StaticResource AccentBrush}"
                            Style="{StaticResource ModernProgressBar}"/>
-                <TextBlock Text="Проверка регионов..." 
+                <TextBlock Text="Загрузка..." 
                          Foreground="{StaticResource TextBrush}"
                          FontSize="14"
                          Margin="0,15,0,0"
