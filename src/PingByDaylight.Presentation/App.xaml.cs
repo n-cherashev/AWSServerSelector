@@ -1,15 +1,13 @@
 using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Application.ViewModels;
 using PingByDaylight.Infrastructure.Services;
-using PingByDaylight.Presentation.Views;
 
 namespace PingByDaylight.Presentation;
 
-public partial class App : System.Windows.Application
+public partial class App : Application
 {
     private readonly IHost _host;
 

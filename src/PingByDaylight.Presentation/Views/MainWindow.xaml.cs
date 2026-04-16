@@ -1,7 +1,7 @@
 using System.Windows;
 using PingByDaylight.Application.ViewModels;
 
-namespace PingByDaylight.Presentation.Views;
+namespace PingByDaylight.Presentation;
 
 public partial class MainWindow : Window
 {
