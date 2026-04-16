@@ -1,0 +1,123 @@
+<Window x:Class="PingByDaylight.Presentation.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" 
+        Height="750" Width="500"
+        MinHeight="750" MinWidth="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#FF0A0A0A"
+        FontFamily="Segoe UI Variable"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Aliased">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header with Menu -->
+        <Menu Grid.Row="0" Background="Transparent" Foreground="{StaticResource TextBrush}">
+            <MenuItem Header="{Binding SettingsMenuText}" Command="{Binding OpenSettingsCommand}"/>
+            <MenuItem Header="{Binding AboutMenuText}" Command="{Binding OpenAboutCommand}"/>
+            <MenuItem Header="{Binding CheckUpdatesMenuText}" Command="{Binding CheckUpdatesCommand}"/>
+            <MenuItem Header="{Binding ConnectionInfoMenuText}" Command="{Binding OpenConnectionInfoCommand}"/>
+        </Menu>
+
+        <!-- Server List -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,20,0,20">
+            <ItemsControl ItemsSource="{Binding ServerGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Expander Margin="0,5" IsExpanded="True">
+                            <Expander.Header>
+                                <TextBlock Text="{Binding DisplayName}" 
+                                         FontWeight="SemiBold" 
+                                         FontSize="16"
+                                         Foreground="{StaticResource TextBrush}"/>
+                            </Expander.Header>
+                            <ItemsControl ItemsSource="{Binding Servers}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="{StaticResource SecondaryBrush}" 
+                                                CornerRadius="8" 
+                                                Margin="0,5" 
+                                                Padding="15">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <!-- Server Name & Checkbox -->
+                                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                    <CheckBox IsChecked="{Binding IsSelected}" 
+                                                            VerticalAlignment="Center"
+                                                            Margin="0,0,10,0"/>
+                                                    <TextBlock Text="{Binding ServerInfo.DisplayName}" 
+                                                             Foreground="{StaticResource TextBrush}"
+                                                             VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                                
+                                                <!-- Latency -->
+                                                <TextBlock Grid.Column="1" 
+                                                         Text="{Binding DisplayLatency}"
+                                                         Foreground="{Binding StatusColor}"
+                                                         VerticalAlignment="Center"
+                                                         Margin="0,0,15,0"/>
+                                                
+                                                <!-- Probe Button -->
+                                                <Button Grid.Column="2" 
+                                                      Content="Ping" 
+                                                      Style="{StaticResource SecondaryButton}"
+                                                      Command="{Binding ProbeCommand}"
+                                                      Padding="10,5"
+                                                      FontSize="12"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Status Bar -->
+        <TextBlock Grid.Row="2" 
+                 Text="{Binding StatusMessage}" 
+                 Foreground="{StaticResource SubTextBrush}"
+                 Margin="0,10"/>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+            <Button Content="{Binding RevertButtonText}" 
+                  Style="{StaticResource SecondaryButton}"
+                  Command="{Binding ResetSelectionCommand}"
+                  IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+                  Margin="0,0,20,0"/>
+            
+            <Button Content="{Binding ApplyButtonText}" 
+                  Style="{StaticResource ModernButton}"
+                  Command="{Binding ApplySelectionCommand}"
+                  IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"/>
+        </StackPanel>
+
+        <!-- Busy Overlay -->
+        <Grid Grid.RowSpan="4" 
+              Background="#80000000" 
+              Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+            <ProgressBar IsIndeterminate="True" 
+                       Width="200" 
+                       Height="10"
+                       Foreground="{StaticResource AccentBrush}"/>
+        </Grid>
+    </Grid>
+</Window>
