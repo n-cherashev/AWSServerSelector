@@ -1,4 +1,4 @@
-using Ardalis.Result;
+using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Domain;
@@ -38,6 +38,6 @@ public class ServerCatalogService : IServerCatalogService
             return Task.FromResult(Result.Success(server));
         }
         
-        return Task.FromResult(Result.Error(new Error("NotFound", $"Server '{key}' not found")));
+        return Task.FromResult(Result.Failure<ServerInfo>($"Server '{key}' not found"));
     }
 }

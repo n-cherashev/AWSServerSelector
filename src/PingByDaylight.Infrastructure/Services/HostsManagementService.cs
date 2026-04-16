@@ -1,4 +1,4 @@
-using Ardalis.Result;
+using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Domain;
@@ -14,20 +14,20 @@ public class HostsManagementService : IHostsManagementService
         _logger = logger;
     }
 
-    public Task<Result<Unit>> ApplySelectionAsync(ServerSelection selection)
+    public Task<UnitResult> ApplySelectionAsync(ServerSelection selection)
     {
         // TODO: Реализация записи в hosts файл
         _logger.LogInformation("Applying selection: {Region}, {ApplyMode}, {BlockMode}", 
             selection.RegionKey, selection.ApplyMode, selection.BlockMode);
         
-        return Task.FromResult(Result.Success(Unit.Value));
+        return Task.FromResult(UnitResult.Success());
     }
 
-    public Task<Result<Unit>> ResetToDefaultAsync()
+    public Task<UnitResult> ResetToDefaultAsync()
     {
         // TODO: Реализация сброса hosts файла
         _logger.LogInformation("Resetting to default configuration");
-        return Task.FromResult(Result.Success(Unit.Value));
+        return Task.FromResult(UnitResult.Success());
     }
 
     public Task<Result<string>> GetHostsContentAsync()

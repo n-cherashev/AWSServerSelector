@@ -1,4 +1,4 @@
-using Ardalis.Result;
+using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 

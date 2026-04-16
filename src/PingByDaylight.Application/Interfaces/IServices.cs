@@ -1,4 +1,4 @@
-using Ardalis.Result;
+using CSharpFunctionalExtensions;
 using PingByDaylight.Domain;
 
 namespace PingByDaylight.Application.Interfaces;
@@ -17,15 +17,15 @@ public interface IConnectionProbeService
 
 public interface IHostsManagementService
 {
-    Task<Result<Unit>> ApplySelectionAsync(ServerSelection selection);
-    Task<Result<Unit>> ResetToDefaultAsync();
+    Task<UnitResult> ApplySelectionAsync(ServerSelection selection);
+    Task<UnitResult> ResetToDefaultAsync();
     Task<Result<string>> GetHostsContentAsync();
 }
 
 public interface IUserSettingsService
 {
     Task<Result<T>> GetSettingAsync<T>(string key, T defaultValue);
-    Task<Result<Unit>> SetSettingAsync<T>(string key, T value);
+    Task<UnitResult> SetSettingAsync<T>(string key, T value);
 }
 
 public interface ILocalizationService

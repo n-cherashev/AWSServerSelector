@@ -1,6 +1,6 @@
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using Ardalis.Result;
+using CSharpFunctionalExtensions;
 using Microsoft.Extensions.Logging;
 using PingByDaylight.Application.Interfaces;
 using PingByDaylight.Domain;
@@ -44,7 +44,7 @@ public class ConnectionProbeService : IConnectionProbeService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to probe server {ServerKey}", serverKey);
-            return Result.Error(new Error("NetworkError", $"Probe failed: {ex.Message}"));
+            return Result.Failure<ConnectionStatus>($"Probe failed: {ex.Message}");
         }
     }
 
@@ -54,7 +54,7 @@ public class ConnectionProbeService : IConnectionProbeService
         var results = await Task.WhenAll(tasks);
         
         var statuses = new List<ConnectionStatus>();
-        Error? firstError = null;
+        string? firstError = null;
 
         foreach (var result in results)
         {
@@ -70,6 +70,6 @@ public class ConnectionProbeService : IConnectionProbeService
 
         return firstError == null 
             ? Result.Success<IReadOnlyList<ConnectionStatus>>(statuses)
-            : Result.Error<IReadOnlyList<ConnectionStatus>>(firstError);
+            : Result.Failure<IReadOnlyList<ConnectionStatus>>(firstError);
     }
 }
