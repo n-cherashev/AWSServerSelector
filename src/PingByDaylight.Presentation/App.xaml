@@ -193,9 +193,9 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="ScrollViewer">
                             <Grid>
-                                <ScrollContentPresenter/>
+                                <ScrollContentPresenter HorizontalAlignment="Stretch"/>
                                 <ScrollBar x:Name="PART_VerticalScrollBar" 
-                                          Alignment="Right"
+                                          HorizontalAlignment="Right"
                                           Width="8"
                                           Opacity="0.5"
                                           Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>

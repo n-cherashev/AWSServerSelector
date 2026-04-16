@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -207,7 +209,24 @@ public partial class ServerGroupViewModel : ObservableObject
     {
         GroupKey = groupKey;
         DisplayName = displayName;
+
+        // Subscribe to server property changes to update best ping
+        Servers.CollectionChanged += (s, e) =>
+        {
+            OnPropertyChanged(nameof(BestPingDisplay));
+            OnPropertyChanged(nameof(BestPingVisible));
+        };
     }
+
+    public int BestPing => Servers
+        .Where(s => s.ConnectionState == ConnectionState.Connected && s.LatencyMs > 0)
+        .Select(s => s.LatencyMs)
+        .DefaultIfEmpty(int.MaxValue)
+        .Min();
+
+    public string BestPingDisplay => BestPing == int.MaxValue ? "---" : $"{BestPing}ms";
+
+    public bool BestPingVisible => BestPing != int.MaxValue;
 }
 
 public partial class ServerItemViewModel : ObservableObject
