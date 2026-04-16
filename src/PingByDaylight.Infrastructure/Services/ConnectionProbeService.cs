@@ -13,6 +13,8 @@ public class ConnectionProbeService : IConnectionProbeService
     private readonly IServerCatalogService _serverCatalogService;
     private readonly int _timeoutMs = 3000;
     private readonly int _maxRetries = 2;
+    
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(5, 5);
 
     public ConnectionProbeService(
         ILogger<ConnectionProbeService> logger,
@@ -146,18 +148,16 @@ public class ConnectionProbeService : IConnectionProbeService
         var keys = serverKeys.ToList();
         _logger.LogInformation("Starting probe for {Count} servers", keys.Count);
         
-        // Выполняем пинг параллельно с ограничением конкуренции
-        var semaphore = new SemaphoreSlim(5); // Максимум 5 одновременных пингов
         var tasks = keys.Select(async key =>
         {
-            await semaphore.WaitAsync();
+            await _semaphore.WaitAsync();
             try
             {
                 return await ProbeAsync(key);
             }
             finally
             {
-                semaphore.Release();
+                _semaphore.Release();
             }
         });
 
