@@ -264,13 +264,13 @@ public partial class ServerGroupViewModel : ObservableObject
         IsRegionProbing = true;
         try
         {
-            // Reset all server states in this region
+            // Reset all server states in this region (this sets them to Unknown state and shows spinner)
             foreach (var server in Servers)
             {
                 server.ResetStatus();
             }
             
-            // Trigger probe for all servers in this region
+            // Trigger probe for all servers in this region asynchronously
             var tasks = Servers.Select(async s => await s.ProbeAsync());
             await Task.WhenAll(tasks);
         }
@@ -354,6 +354,7 @@ public partial class ServerItemViewModel : ObservableObject
         ConnectionState = ConnectionState.Unknown;
         JitterMs = 0;
         PacketLossPercent = 0;
+        IsProbing = true; // Set to true to show spinner immediately
         OnPropertyChanged(nameof(DisplayLatency));
         OnPropertyChanged(nameof(StatusColor));
         OnPropertyChanged(nameof(QualityBadge));
@@ -363,7 +364,6 @@ public partial class ServerItemViewModel : ObservableObject
     [RelayCommand]
     private async Task ProbeAsync()
     {
-        IsProbing = true;
         try
         {
             var result = await _probeService.ProbeAsync(ServerInfo.Key);

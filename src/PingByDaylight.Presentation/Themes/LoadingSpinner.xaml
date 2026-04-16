@@ -11,11 +11,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type components:LoadingSpinner}">
                     <Grid Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
-                        <Border Width="18" Height="18"
-                                BorderBrush="{TemplateBinding Foreground}"
-                                BorderThickness="3"
-                                CornerRadius="9"
+                        <!-- Background circle (faded) -->
+                        <Ellipse Width="18" Height="18"
+                                Stroke="{TemplateBinding Foreground}"
+                                StrokeThickness="3"
                                 Opacity="0.3"/>
+                        <!-- Spinning arc -->
                         <Border Width="18" Height="18"
                                 BorderBrush="{TemplateBinding Foreground}"
                                 BorderThickness="3"

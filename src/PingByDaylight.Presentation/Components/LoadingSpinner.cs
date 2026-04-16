@@ -51,6 +51,8 @@ public class LoadingSpinner : Control
         if (_rotateTransform == null)
             return;
 
+        _rotateTransform.BeginAnimation(RotateTransform.AngleProperty, null);
+
         if (IsActive)
         {
             var animation = new DoubleAnimation
@@ -59,13 +61,13 @@ public class LoadingSpinner : Control
                 To = 360,
                 Duration = TimeSpan.FromMilliseconds(800),
                 RepeatBehavior = RepeatBehavior.Forever,
-                EasingFunction = new LinearEase()
+                IsCumulative = true
             };
+            
             _rotateTransform.BeginAnimation(RotateTransform.AngleProperty, animation);
         }
         else
         {
-            _rotateTransform.BeginAnimation(RotateTransform.AngleProperty, null);
             _rotateTransform.Angle = 0;
         }
     }
