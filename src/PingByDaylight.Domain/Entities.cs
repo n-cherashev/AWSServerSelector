@@ -13,7 +13,8 @@ public record ServerSelection(
     string RegionKey,
     ApplyMode ApplyMode,
     BlockMode BlockMode,
-    bool MergeUnstable
+    bool MergeUnstable,
+    IEnumerable<ServerInfoWithPing> ServersWithPing = null!
 );
 
 public enum ApplyMode
